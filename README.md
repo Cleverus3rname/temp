@@ -142,12 +142,14 @@ Mainly these 4 Documents:
 Each of these 4 documents will come in handy later when we need information like Standards and Depth of Knowledge.
 
 
-### Step 2: Parsing Subject, Grade, and Claim Values from these Documents
+### Step 2: Parsing Subject, Grade, Claim, and Target Values from these Documents
 We can now iterate through the array of CFDocuments to scrape their Subject, Grade and Claim information.
 
-* Subject, Grade, and Claim can be found in ``CFDocument[index].title``
+* Subject can be found in ``CFDocument[index].subjectURI[0].title`` *(Always use 0th index for subjectURI)*
 
-The string found in ``CFDocument[index].title`` will be in one of the following formats:
+* Grade, Claim, and Target can be found in ``CFDocument[index].title``
+
+* The string found in ``CFDocument[index].title`` will be in one of the following formats:
 
 #### ELA:
 ```
@@ -181,4 +183,53 @@ or
 
 * **Y** = Claim (INT 0-9)
 
-* **Z** = Target (If ELA: INT 0-99, If Math: Char A-Z  
+* **Z** = Target (If ELA: INT 0-99, If Math: Char A-Z)
+
+
+
+### Step 3: Getting Claim Description, Domain and Shortname
+To get the fulltext description for a claim, its Domains, and a shortname that will be useful later, we need to move our scope from getAllCFDocuments() to getCFPackage().
+
+* Make a GET Request to CASE's getPackage() API Call with the GUID of your subject's corresponding content spec document as a parameter (remember the 4 important documents from above?)
+
+* **Smarter Balanced ELA Content Specification** 	(GUID: ``cbbb8d01-63fc-4adf-9803-a3781839b6b6``)
+* **Smarter Balanced Math Content Specification** (GUID: ``255adad7-2854-47d7-9aa4-c5e1750eb8ca``)
+
+**Example:**
+**ELA Content Spec as Parameter:**
+
+```
+https://case.smarterbalanced.org/ims/case/v1p0/CFPackages/cbbb8d01-63fc-4adf-9803-a3781839b6b6
+```
+
+The Response Body will have a singular CFDocument object containing mostly unimportant information like the title of this document and its subject.
+However, it also returns an array of CFItems that contain important information about claims like their descriptions, shortnames, and domains.
+
+The main difficulty here is distinguishing "Claim" CFItems from other CFItems like "Measured Skills" and "Components"
+
+* Filter out any CFItems that are not of type "Claim". 
+* Item Types are found at ``CFItems[index].CFItemType``
+* Claim Descriptions are found at ``CFItems[indexOfClaim].fullStatement``
+* Claim Shortnames are found at ``CFItems[indexOfClaim].humanCodingScheme``
+* The Domain **MIGHT** be found at ``CFItems[indexOfClaim + 1].fullStatement`` **IF** the ``CFItem[indexOfClaim + 1].CFItemType === "Domain"
+Domains are optionally included with claims.
+
+#### Code Example:
+``` javascript
+
+(for var i = 0; i < CFItems.length; i++) {
+
+	if (CFItems[i].CFItemType === "Claim") {
+	
+		console.log(CFItems[i].fullStatement);
+		console.log(CFItems[i].humanCodingScheme);
+		
+		if(CFItems[i+1].CFItemType === "Domain") {
+		
+			console.log(CFItems[i+1].fullStatement);
+			
+		}
+	}	
+		
+}
+```
