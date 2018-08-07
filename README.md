@@ -123,8 +123,62 @@ This section describes exactly what is required to scrape data from CASE to our 
 https://case.smarterbalanced.org/ims/case/v1p0/CFDocuments?limit=99999999999&offset=0&sort&orderBy&filter&fields
 ``
 
+You'll notice that the ``Limit`` parameter is 999999999, this is just to ensure the API call returns ALL of the Content Spec Documents.
+
+*Note: For some dumb reason, CASE will always return 2-3 less entries than specified in the ``Limit`` parameter.*
+
+* The Response Body will be an array of all the CFDocument objects stored in the CASE DB
+
+The majority of these will be SmarterBalanced Spec Documents with titles containing Subject, Grade, Claim, and Target.
+
+*However*, a few of these Documents will **not** be Grade/Claim/Target, but still important.
+Mainly these 4 Documents:
+
+* **Smarter Balanced ELA Content Specification** 	(GUID: ``cbbb8d01-63fc-4adf-9803-a3781839b6b6``)
+* **Smarter Balanced Math Content Specification** (GUID: ``255adad7-2854-47d7-9aa4-c5e1750eb8ca``)
+* **CCSS Imported from Digital Library** (GUID: ``1a66f1ae-9f7d-4c86-9e24-d0f022279578``)
+* **Norm Webb's Depth of Knowledge [DOK] Levels of Cognitive Difficulty** (GUID: ``b7bc9d8c-cb5f-4dc8-96da-13ce635053d1``)
+
+Each of these 4 documents will come in handy later when we need information like Standards and Depth of Knowledge.
 
 
+### Step 2: Parsing Subject, Grade, and Claim Values from these Documents
+We can now iterate through the array of CFDocuments to scrape their Subject, Grade and Claim information.
+
+* Subject, Grade, and Claim can be found in ``CFDocument[index].title``
+
+The string found in ``CFDocument[index].title`` will be in one of the following formats:
+
+#### ELA:
+```
+1. English Language Arts Specification: Grade *X* Claim *Y* Target *Z*
+
+or
+
+2. English Language Arts Performance Task Specification: Grade *X* "Performance Task Name"
+```
+ 
 
 
+#### Math:
+```
+1. Grade *X* Mathematics Item Specification C*Y* T*Z*
 
+or
+
+2. *HS* Mathematics Item Specification C*Y* T*Z*
+
+or
+
+3. Math Grades *X-X*, Claim *Y*
+
+or
+
+4. Math *High School*, Claim *Y* 
+```
+
+* **X** = Grade (Either INT from 3-8 **or** String HS/High School to represent 9-12)
+
+* **Y** = Claim (INT 0-9)
+
+* **Z** = Target (If ELA: INT 0-99, If Math: Char A-Z  
