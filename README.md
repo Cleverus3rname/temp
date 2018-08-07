@@ -111,6 +111,17 @@ Because this format is based on JSON, a Document Store Database would be the ide
 |  Rubric [String] | Array of TaskModel Scoring rules Fulltext | getCFPackage(Claim-Target Document) | ``CFItems[idxOfRubric].fullStatement`` |  
 |  MSkill (String) | Measured Skill fulltext | getCFPackage(Claim-Target Document) | ``CFItems[idxOfMeasuredSkill].fullStatement`` |  
 
+## From CASE to SB-CSE Data Structure (Step-by-step):
+This section describes exactly what is required to scrape data from CASE to our new structure. This guide should be referenced when designing a script to scrape all data from CASE for our new DB.
+
+
+### Step 1: Getting All Content Spec Documents
+
+* Make a GET Request to CASE's getAllCFDocuments() API Call Ex:
+
+``
+https://case.smarterbalanced.org/ims/case/v1p0/CFDocuments?limit=99999999999&offset=0&sort&orderBy&filter&fields
+``
 
 
 
