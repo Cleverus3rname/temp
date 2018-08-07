@@ -72,7 +72,7 @@ Because this format is based on JSON, a Document Store Database would be the ide
 
 ## Claim:
 
-|  **Key**  | **Description** | **CASE API Scope** | **Data Location** | **Parsed?** |
+|  **Key**  | **Description** | **CASE API Scope** | **Data Location** | **Parsed** |
 |  :------ | :------ | :------ | :------ | :------: |
 |  Title (String)  | Claim # and title | getAllCFDocuments() | ``CFDocument[index].title`` | **X** |
 |  Grade (String) | Grade # 01-12 also includes HS for 09-12 | getAllCFDocuments() | ``CFDocument[index].notes`` | **X** |
@@ -84,8 +84,8 @@ Because this format is based on JSON, a Document Store Database would be the ide
 
 ## Target:
 
-|  **Key** | **Description** | **CASE API Scope** | **Data Location** | **Requires Parsing** |
-|  :------: | :------: | :------: | :------: | :------: |
+|  **Key** | **Description** | **CASE API Scope** | **Data Location** | **Parsed** |
+|  :------ | :------ | :------ | :------ | :------: |
 |  Title (String) | Target Name | getCFPackage(Claim-Target Document) | ``CFDocument.title`` | **X** |
 |  Short (String) | Target shortname | getCFPackage(Claim-Target Document) | ``CFDocument.notes`` |  |
 |  KeyDetails (String) | Target Fulltext | getCFPackage(Claim-Target Document) | ``CFItems[idxOfTarget].fullStatement`` |  |
