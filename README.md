@@ -1,6 +1,6 @@
-# SB-CSE Database Structure
-
-
+# About SB-CSE Data Structure
+This new and improved data structure takes the required data from CASE API and condenses it into a cohesive, lighter, and manageable format. 
+Because this format is based on JSON, a Document Store Database would be the ideal implementation method. (e.x. MongoDB or Couchbase)
 ## JSON:
 ```{  
    "claim":{  
@@ -72,8 +72,8 @@
 
 ## Claim:
 
-|  **Key** | **Type** | **Description** | **CASE API Scope** | **Data Location** | **Requires Parsing** |
-|  :------ | :------ | :------ | :------ | :------ | :------ |
+|  **Key** | **Type** | **Description** | **CASE API Scope** | **Data Location** | **Parsed?** |
+|  :------ | :------ | :------ | :------ | :------ | :------: |
 |  Title | String | Claim # and title | getAllCFDocuments() | ``CFDocument[index].title`` | **X** |
 |  Grade | String | Grade # 01-12 also includes HS for 09-12 | getAllCFDocuments() | ``CFDocument[index].notes`` | **X** |
 |  Subject | String | "Mathematics" or  "English Language Arts" | getAllCFDocuments() | ``CFDocument[index].subjectURI[0].title`` |  |
@@ -84,7 +84,7 @@
 
 ## Target:
 
-|  **Key** | **Type** | **Description** | **CASE API Scope** | **Data Location** | **Requires Parsing** |
+|  **Key** | **Type** | **Description** | **CASE API Scope** | **Data Location** | **Parsed**? |
 |  :------ | :------ | :------ | :------ | :------ | :------: |
 |  Title | String | Target Name | getCFPackage(Claim-Target Document) | ``CFDocument.title`` | **X** |
 |  Short | String | Target shortname | getCFPackage(Claim-Target Document) | ``CFDocument.notes`` |  |
