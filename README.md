@@ -72,15 +72,15 @@ Because this format is based on JSON, a Document Store Database would be the ide
 
 ## Claim:
 
-|  **Key** | **Type** | **Description** | **CASE API Scope** | **Data Location** | **Parsed?** |
-|  :------ | :------ | :------ | :------ | :------ | :------: |
-|  Title | String | Claim # and title | getAllCFDocuments() | ``CFDocument[index].title`` | **X** |
-|  Grade | String | Grade # 01-12 also includes HS for 09-12 | getAllCFDocuments() | ``CFDocument[index].notes`` | **X** |
-|  Subject | String | "Mathematics" or  "English Language Arts" | getAllCFDocuments() | ``CFDocument[index].subjectURI[0].title`` |  |
-|  Description | String | Claim Fulltext | getCFPackage(SB ELA/Math Content Spec) | ``CFItem[indexOfClaim].fullStatement`` |  |
-|  Short | String | Claim shortname | getCFPackage(SB ELA/Math Content Spec) | ``CFItem[indexOfClaim].abbreviatedStatement`` |  |
-|  Domain | String | Optional Domain Fulltext | getCFPackage(SB ELA/Math Content Spec) | ``CFItem[indexOfDomain].fullStatement`` |  |
-|  Targets | [target] | Array of target type | getCFPackage(Target Document) | see below |  |
+|  **Key**  | **Description** | **CASE API Scope** | **Data Location** | **Parsed?** |
+|  :------ | :------ | :------ | :------ | :------: |
+|  Title (String)  | Claim # and title | getAllCFDocuments() | ``CFDocument[index].title`` | **X** |
+|  Grade (String) | Grade # 01-12 also includes HS for 09-12 | getAllCFDocuments() | ``CFDocument[index].notes`` | **X** |
+|  Subject (String) | "Mathematics" or  "English Language Arts" | getAllCFDocuments() | ``CFDocument[index].subjectURI[0].title`` |  |
+|  Description (String) | Claim Fulltext | getCFPackage(SB ELA/Math Content Spec) | ``CFItem[indexOfClaim].fullStatement`` |  |
+|  Short (String) | Claim shortname | getCFPackage(SB ELA/Math Content Spec) | ``CFItem[indexOfClaim].abbreviatedStatement`` |  |
+|  Domain (String) | Optional Domain Fulltext | getCFPackage(SB ELA/Math Content Spec) | ``CFItem[indexOfDomain].fullStatement`` |  |
+|  Targets (String) | Array of target type | getCFPackage(Target Document) | see below |  |
 
 ## Target:
 
