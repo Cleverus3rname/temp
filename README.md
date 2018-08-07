@@ -211,7 +211,10 @@ The main difficulty here is distinguishing "Claim" CFItems from other CFItems li
 * Item Types are found at ``CFItems[index].CFItemType``
 * Claim Descriptions are found at ``CFItems[indexOfClaim].fullStatement``
 * Claim Shortnames are found at ``CFItems[indexOfClaim].humanCodingScheme``
-* The Domain **MIGHT** be found at ``CFItems[indexOfClaim + 1].fullStatement`` **IF** the ``CFItem[indexOfClaim + 1].CFItemType === "Domain"``
+* The Domain **MIGHT** be found at ``CFItems[indexOfClaim + 1].fullStatement`` **IF**
+
+``CFItem[indexOfClaim + 1].CFItemType === "Domain"``
+
 Domains are optionally included with claims.
 
 #### Code Example:
@@ -233,3 +236,72 @@ for (var i = 0; i < CFItems.length; i++) {
 		
 }
 ```
+
+
+### Step 4: Getting Target Document Information
+So far we've covered the first section of the new SB-CSE Data Format, mainly Claims. The next big step is getting our Targets information.
+From here, we'll be using getAllCFDocuments() to get our target GUIDs as parameters for getCFPackage().
+
+#### In getAllCFDocuments():
+
+* Find the index of the Target Document you want information from. This requires filtering based on values in the ``CFDocument[index].title`` string. 
+* Find the GUID of the Target Document you found from the above step. This can be found at ``CFDocuments[index].identifier``
+* Use that GUID in the getCFPackage() section below.
+
+#### In getCFPackage()
+* Make a GET Request using the above Target Document GUID as a parameter.
+
+**Example using GUID of ELA Grade 3, Claim 1, Target 9:**
+```
+https://case.smarterbalanced.org/ims/case/v1p0/CFPackages/444c5d50-ceb4-11e7-9cd4-75d19dc0a557
+```
+The Response Body will have a Singular CFDocument containing basic info about the document (title, grade, subject, etc)
+It will also have an array of CFItems containing almost everything we need to fill the rest of our Data structure.
+
+From here, referencing the above table should be helpful in filling out the rest of the Data Structure.
+
+### Brief Summary of each key and value:
+
+#### Easy:
+* Target Title can be found at ``CFDocument.title``
+* Target Shortname can be found at CFDocument.notes
+* KeyDetails can be found at ``CFItem[index].fullStatement`` where the ``CFItem[index].CFItemType === "Target"``
+* Standards Entries can be found at each ``CFItem[index].humanCodingScheme`` where the ``CFItem[index].CFItemType === "Measured Skill"``
+* Descriptions for above standards can be found at ``CFItem[index].fullStatement`` where the index is the same as above.
+* Type can be found at ``CFDocument.creator``. This string will contain "CAT" or "PT"
+* Clarification can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Clarification"``
+* Heading can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Section Heading"``
+* Evidence entries can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Evidence Required"``
+* Accessibility can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Accessibility"``
+* TaskModel Entries can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Task Model"``
+* TaskDescription entries can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Task Description"``
+* Stimulus can be found at ``CFItems[index].fullStatement`` where the ``CFItem[index].CFItemType === "Stimulus"
+
+#### Not-So-Easy:
+**The following items all share the same CFItemType "General Requirements" but have very different values and sub-types:**
+
+* Vocab can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].abbreviatedStatement === "Key\Construct Relevant Vocabulary"``
+* Tools can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].abbreviatedStatement === "Allowable Tools"``
+* StimInfo can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].abbreviatedStatement === "Stimuli/Passages"``
+* DevNotes can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].abbreviatedStatement === "Development Notes"``
+* Complexity can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].abbreviatedStatement === "Stimuli/Text Complexity"``
+* DualText can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].abbreviatedStatement === "Dual-Text Stimuli"``
+
+**The following items are related to TaskModel entries: **
+
+* Stem entries can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].CFItemType === "Stem"``
+
+If the ``CFItemType`` at the index immediately following the above Stem is "Stem", this will be a Dual-Text Stem. It will also have "Appropriate Stems for Dual Text Stimuli" as its ``abbreviatedStatement``
+
+* Example Entries can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].CFItemType === "Example"``
+* Rubric Entries can be found at ``CFItems[index].fullStatement`` where ``CFItems[index].CFItemType === "Rubric"``
+
+The order that these items are entered into the array matter because they are parallel to the TaskModel Array.
+Each Task Model has a regular Stem, a Dual-Text Stem, an Example, and a Rubric.
+So the Stem array should have 2x as many entries as TaskModel, Example, or Rubric, does.
+
+
+## Step 5: Getting Depth of Knowledge
+
+
+
