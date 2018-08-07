@@ -301,7 +301,51 @@ Each Task Model has a regular Stem, a Dual-Text Stem, an Example, and a Rubric.
 So the Stem array should have 2x as many entries as TaskModel, Example, or Rubric, does.
 
 
-## Step 5: Getting Depth of Knowledge
+### Step 5: Getting Depth of Knowledge
+This can get pretty difficult as **sometimes** DOK information is there for a target, and **sometimes** its not.
+
+Essentially, you want to find the ``CFItem[index].abbreviatedStatement`` where ``CFItemType === "Target"``
+then call getCFPackage on the corresponding subject's Content Specification:
+* **Smarter Balanced ELA Content Specification** 	(GUID: ``cbbb8d01-63fc-4adf-9803-a3781839b6b6``)
+* **Smarter Balanced Math Content Specification** (GUID: ``255adad7-2854-47d7-9aa4-c5e1750eb8ca``)
+
+Then find all indexes that have  ``CFAssociations[index].originNodeURI.title === "your-shortname-here"``
+Then find all CFAssociations[j].destinationNodeURI.uri that follows this format:
+
+```
+urn:fdc:edplancms.com:2016:cfr:DOK:X-DOK%YYY
+```
+* **X** is the DOK Type (Types are listed in the DOK Document Package)
+* **YYY** is the DOK Level (Typically in 20*Y* format where the last digit is the actual level)
+
+**Parsing the value example:**
 
 
+In getCFPackage(ELA Grade 3 Claim 1 Target 9):
+
+``CFItems[index].abbreviatedStatement = "E.G3.C1RI.T9"``
+
+In getCFPackage(Smarter Balanced ELA Content Specification):
+
+``` javascript
+for(var i = 0; i < CFAssociations.length(); i++) {
+
+	if (CFAssociations[i].originNodeURI.title === "E.G3.C1RI.T9") {
+	
+		if(CFAssociations[i].destinationNodeURI.uri.includes("DOK%") {
+			console.log(CFAssociations[i].destinationNodeURI.uri);
+		}
+	}
+}
+```
+**Output:**
+
+```
+urn:fdc:edplancms.com:2016:cfr:DOK:R-DOK%202
+urn:fdc:edplancms.com:2016:cfr:DOK:R-DOK%203
+```
+
+This means that our DOKs are **R-DOK2** and **R-DOK3**
+
+* The DOK fulltexts can be found in the DOK Document Package at ``CFItem[index].fullStatement`` where ``CFItem[index].CFItemType === "R-DOK2"`` or ``"R-DOK3"``
 
