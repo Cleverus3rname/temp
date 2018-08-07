@@ -2,7 +2,7 @@
 This new and improved data structure takes the required data from CASE API and condenses it into a cohesive, lighter, and manageable format. 
 Because this format is based on JSON, a Document Store Database would be the ideal implementation method. (e.x. MongoDB or Couchbase)
 ## JSON:
-```{  
+``` JSON {  
    "claim":{  
       "Title":"string",
       "Grade":"string",
