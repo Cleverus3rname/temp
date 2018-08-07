@@ -211,13 +211,13 @@ The main difficulty here is distinguishing "Claim" CFItems from other CFItems li
 * Item Types are found at ``CFItems[index].CFItemType``
 * Claim Descriptions are found at ``CFItems[indexOfClaim].fullStatement``
 * Claim Shortnames are found at ``CFItems[indexOfClaim].humanCodingScheme``
-* The Domain **MIGHT** be found at ``CFItems[indexOfClaim + 1].fullStatement`` **IF** the ``CFItem[indexOfClaim + 1].CFItemType === "Domain"
+* The Domain **MIGHT** be found at ``CFItems[indexOfClaim + 1].fullStatement`` **IF** the ``CFItem[indexOfClaim + 1].CFItemType === "Domain"``
 Domains are optionally included with claims.
 
 #### Code Example:
 ``` javascript
 
-(for var i = 0; i < CFItems.length; i++) {
+for (var i = 0; i < CFItems.length; i++) {
 
 	if (CFItems[i].CFItemType === "Claim") {
 	
